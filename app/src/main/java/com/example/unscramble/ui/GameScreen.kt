@@ -134,6 +134,7 @@ fun GameScreen(
 
         AddWordsScreen(
             userInput = gameViewModel.userInput,
+            isInputEmpty = gameUiState.isInputEmpty,
             onUserInputChanged = { gameViewModel.updateUserInput(it) },
             onKeyboardDone = { gameViewModel.checkUserGuess() },
             gameViewModel = gameViewModel,
@@ -266,6 +267,7 @@ private fun FinalScoreDialog(
 @Composable
 fun AddWordsScreen(
     userInput: String,
+    isInputEmpty: Boolean,
     onKeyboardDone: () -> Unit,
     onUserInputChanged: (String) -> Unit,
     gameViewModel : GameViewModel,
@@ -297,8 +299,13 @@ fun AddWordsScreen(
                     disabledContainerColor = colorScheme.surface,
                 ),
                 onValueChange = onUserInputChanged,
+                isError = isInputEmpty,
                 label = {
-                    Text("silahkan isi kata")
+                    if (isInputEmpty) {
+                        Text("Harap inputan di isi")
+                    } else {
+                        Text("Masukkan kata")
+                    }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done

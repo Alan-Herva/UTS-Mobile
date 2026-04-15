@@ -16,10 +16,13 @@
 
 package com.example.unscramble.ui
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.unscramble.data.AppDatabase
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
@@ -29,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel containing the app data and methods to process the data
@@ -48,6 +52,8 @@ class GameViewModel : ViewModel() {
     // Set of words used in the game
     private var usedWords: MutableSet<String> = mutableSetOf()
     private lateinit var currentWord: String
+
+    val listWord : MutableList<WordsModel> = mutableStateListOf()
 
     init {
         resetGame()
@@ -145,6 +151,12 @@ class GameViewModel : ViewModel() {
         }
     }
 
+//    private fun getRandomWord(){
+//        viewModelScope.launch {
+//
+//        }
+//    }
+
 
 //    CUSTOM FUN TO INSERT DATA
 
@@ -155,10 +167,22 @@ class GameViewModel : ViewModel() {
     fun insertData(wordsInput: String, db : AppDatabase){
         if (wordsInput.isNotEmpty()){
 
-//            val wordsTemp = emptyList<WordsModel>()
-//
-//            db.WordsDao().insert(wordsTemp)
+            val wordsTemp = WordsModel(word= wordsInput)
+
+            viewModelScope.launch {
+                db.WordsDao().insert(wordsTemp)
+            }
+
+            updateUserInput("")
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isInputEmpty = true,
+                )
+            }
         }
     }
+
+
 
 }

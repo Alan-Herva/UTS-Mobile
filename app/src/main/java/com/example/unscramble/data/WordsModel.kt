@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 @Entity("words")
 data class WordsModel(
 
-    @PrimaryKey
+    @PrimaryKey(true)
     @field:SerializedName("index")
     val index: Int = 0,
 
