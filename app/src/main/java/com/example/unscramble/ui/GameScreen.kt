@@ -126,6 +126,11 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                 onPlayAgain = { gameViewModel.resetGame() }
             )
         }
+
+        AddWordsScreen(
+            onUserInputChanged = { gameViewModel.updateUserGuess(it) },
+            onKeyboardDone = { gameViewModel.checkUserGuess() },
+        )
     }
 }
 
@@ -248,6 +253,51 @@ private fun FinalScoreDialog(
             }
         }
     )
+}
+
+@Composable
+fun AddWordsScreen(
+    onKeyboardDone: () -> Unit,
+    onUserInputChanged: (String) -> Unit,
+    modifier: Modifier = Modifier) {
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(mediumPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(mediumPadding)
+        ) {
+            Text(
+                text = "Tambah kata",
+                style = typography.displayMedium
+            )
+            OutlinedTextField(
+                value = "",
+                singleLine = true,
+                shape = shapes.large,
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = colorScheme.surface,
+                    unfocusedContainerColor = colorScheme.surface,
+                    disabledContainerColor = colorScheme.surface,
+                ),
+                onValueChange = onUserInputChanged,
+                label = {
+                    Text("silahkan isi kata")
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { onKeyboardDone() }
+                )
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
