@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.unscramble.data.AppDatabase
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
+import com.example.unscramble.data.WordsDao
 import com.example.unscramble.data.WordsModel
 import com.example.unscramble.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,7 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel containing the app data and methods to process the data
  */
-class GameViewModel : ViewModel() {
+class GameViewModel(val dao: WordsDao) : ViewModel() {
 
     // Game UI state
     private val _uiState = MutableStateFlow(GameUiState())
@@ -151,11 +152,11 @@ class GameViewModel : ViewModel() {
         }
     }
 
-//    private fun getRandomWord(){
-//        viewModelScope.launch {
-//
-//        }
-//    }
+    private fun getRandomWord(){
+        viewModelScope.launch {
+
+        }
+    }
 
 
 //    CUSTOM FUN TO INSERT DATA
@@ -164,13 +165,13 @@ class GameViewModel : ViewModel() {
         userInput = wordsInput
     }
 
-    fun insertData(wordsInput: String, db : AppDatabase){
+    fun insertData(wordsInput: String){
         if (wordsInput.isNotEmpty()){
 
             val wordsTemp = WordsModel(word= wordsInput)
 
             viewModelScope.launch {
-                db.WordsDao().insert(wordsTemp)
+                dao.insert(wordsTemp)
             }
 
             updateUserInput("")

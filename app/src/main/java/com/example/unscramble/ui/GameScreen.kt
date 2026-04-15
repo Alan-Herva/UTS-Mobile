@@ -62,8 +62,7 @@ import com.example.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
 fun GameScreen(
-    gameViewModel: GameViewModel = viewModel(),
-    db : AppDatabase
+    gameViewModel: GameViewModel = viewModel()
 ) {
     val gameUiState by gameViewModel.uiState.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -138,7 +137,6 @@ fun GameScreen(
             onUserInputChanged = { gameViewModel.updateUserInput(it) },
             onKeyboardDone = { gameViewModel.checkUserGuess() },
             gameViewModel = gameViewModel,
-            db = db,
         )
     }
 }
@@ -271,7 +269,6 @@ fun AddWordsScreen(
     onKeyboardDone: () -> Unit,
     onUserInputChanged: (String) -> Unit,
     gameViewModel : GameViewModel,
-    db: AppDatabase,
     modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -325,7 +322,7 @@ fun AddWordsScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { gameViewModel.insertData(userInput, db) }
+                onClick = { gameViewModel.insertData(userInput) }
             ) {
                 Text(
                     text = stringResource(R.string.submit),
