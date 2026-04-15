@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import com.example.unscramble.data.AppDatabase
 import com.example.unscramble.data.MAX_NO_OF_WORDS
 import com.example.unscramble.data.SCORE_INCREASE
+import com.example.unscramble.data.WordsModel
 import com.example.unscramble.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,9 @@ class GameViewModel : ViewModel() {
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     var userGuess by mutableStateOf("")
+        private set
+
+    var userInput by mutableStateOf("")
         private set
 
     // Set of words used in the game
@@ -141,5 +145,20 @@ class GameViewModel : ViewModel() {
         }
     }
 
+
+//    CUSTOM FUN TO INSERT DATA
+
+    fun updateUserInput(wordsInput: String){
+        userInput = wordsInput
+    }
+
+    fun insertData(wordsInput: String, db : AppDatabase){
+        if (wordsInput.isNotEmpty()){
+
+//            val wordsTemp = emptyList<WordsModel>()
+//
+//            db.WordsDao().insert(wordsTemp)
+        }
+    }
 
 }

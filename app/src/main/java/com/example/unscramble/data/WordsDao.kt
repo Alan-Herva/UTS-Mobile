@@ -11,5 +11,5 @@ interface WordsDao {
     suspend fun getAllWords() : List<WordsModel>
 
     @Insert
-    suspend fun insert(vararg wordsModel : WordsModel)
+    suspend fun insert(vararg wordsModel: WordsModel)
 }

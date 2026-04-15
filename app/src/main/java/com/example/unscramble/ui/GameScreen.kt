@@ -55,11 +55,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.RoomDatabase
 import com.example.unscramble.R
+import com.example.unscramble.data.AppDatabase
 import com.example.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
-fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
+fun GameScreen(
+    gameViewModel: GameViewModel = viewModel(),
+    db : AppDatabase
+) {
     val gameUiState by gameViewModel.uiState.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -128,8 +133,11 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
         }
 
         AddWordsScreen(
-            onUserInputChanged = { gameViewModel.updateUserGuess(it) },
+            userInput = gameViewModel.userInput,
+            onUserInputChanged = { gameViewModel.updateUserInput(it) },
             onKeyboardDone = { gameViewModel.checkUserGuess() },
+            gameViewModel = gameViewModel,
+            db = db,
         )
     }
 }
@@ -257,8 +265,11 @@ private fun FinalScoreDialog(
 
 @Composable
 fun AddWordsScreen(
+    userInput: String,
     onKeyboardDone: () -> Unit,
     onUserInputChanged: (String) -> Unit,
+    gameViewModel : GameViewModel,
+    db: AppDatabase,
     modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -276,7 +287,7 @@ fun AddWordsScreen(
                 style = typography.displayMedium
             )
             OutlinedTextField(
-                value = "",
+                value = userInput,
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
@@ -297,13 +308,33 @@ fun AddWordsScreen(
                 )
             )
         }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(mediumPadding),
+            verticalArrangement = Arrangement.spacedBy(mediumPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { gameViewModel.insertData(userInput, db) }
+            ) {
+                Text(
+                    text = stringResource(R.string.submit),
+                    fontSize = 16.sp
+                )
+            }
+
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GameScreenPreview() {
-    UnscrambleTheme {
-        GameScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GameScreenPreview() {
+//    UnscrambleTheme {
+//        GameScreen(
+//        )
+//    }
+//}
