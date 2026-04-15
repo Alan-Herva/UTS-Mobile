@@ -135,7 +135,7 @@ fun GameScreen(
             userInput = gameViewModel.userInput,
             isInputEmpty = gameUiState.isInputEmpty,
             onUserInputChanged = { gameViewModel.updateUserInput(it) },
-            onKeyboardDone = { gameViewModel.checkUserGuess() },
+            onKeyboardDone = { gameViewModel.insertData(gameViewModel.userInput) },
             gameViewModel = gameViewModel,
         )
     }

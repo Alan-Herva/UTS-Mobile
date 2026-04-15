@@ -12,6 +12,6 @@ data class WordsModel(
     val index: Int = 0,
 
     @field:SerializedName("word")
-    val word: String? = null,
+    val word: String = "",
 
 )

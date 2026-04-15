@@ -54,10 +54,16 @@ class GameViewModel(val dao: WordsDao) : ViewModel() {
     private var usedWords: MutableSet<String> = mutableSetOf()
     private lateinit var currentWord: String
 
-    val listWord : MutableList<WordsModel> = mutableStateListOf()
+    var listWord : List<WordsModel> = emptyList()
 
     init {
-        resetGame()
+        viewModelScope.launch {
+            listWord = dao.getAllWords()
+
+            if (listWord.isNotEmpty()) {
+                resetGame()
+            }
+        }
     }
 
     /*
@@ -143,7 +149,7 @@ class GameViewModel(val dao: WordsDao) : ViewModel() {
 
     private fun pickRandomWordAndShuffle(): String {
         // Continue picking up a new random word until you get one that hasn't been used before
-        currentWord = allWords.random()
+        currentWord = getRandomWord()
         return if (usedWords.contains(currentWord)) {
             pickRandomWordAndShuffle()
         } else {
@@ -152,10 +158,8 @@ class GameViewModel(val dao: WordsDao) : ViewModel() {
         }
     }
 
-    private fun getRandomWord(){
-        viewModelScope.launch {
-
-        }
+    private fun getRandomWord() : String {
+        return listWord.random().word
     }
 
 
